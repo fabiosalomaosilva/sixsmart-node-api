@@ -1,0 +1,18 @@
+{
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.colorTheme": "GitHub Dark",
+  "editor.formatOnSave": true,
+  "eslint.codeActionsOnSave.rules": null,
+  "recommendations": [
+    "dbaeumer.vscode-eslint"
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+  },
+}
