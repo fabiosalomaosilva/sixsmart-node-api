@@ -29,6 +29,13 @@ class AuthService {
   async verifyEmail(token: string): Promise<RepositoryResponse<TokenPayload>> {
     return await authRepository.verifyEmail(token);
   }
+
+  async sendCode(
+    email: string,
+    url: string,
+  ): Promise<RepositoryResponse<TokenPayload>> {
+    return await authRepository.sendCodeAsync(email, url);
+  }
 }
 
 export default new AuthService();

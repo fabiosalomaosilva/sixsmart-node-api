@@ -47,10 +47,7 @@ class AuthRepository {
         return res;
       }
 
-      const secret = process.env.JWT_SECRET as string;
-      const hashVerify = jwt.sign(user, secret as string, {
-        expiresIn: '2d',
-      });
+      await this.sendCodeAsync(user.email, url);
 
       user.password = await bcrypt.hash(user.password, 10);
 
@@ -203,7 +200,8 @@ class AuthRepository {
           userRes as User,
         );
         const res: RepositoryResponse<TokenPayload> = {
-          message: 'E-mail validado com sucesso.',
+          message:
+            'Que legal. Seu e-mail foi validado com sucesso. A partir de agora você poderá utilizar o Mega Sorte',
           status: 'success',
         };
         return res;
@@ -220,6 +218,43 @@ class AuthRepository {
       };
       return res;
     }
+  }
+
+  async sendCodeAsync(
+    email: string,
+    url: string,
+  ): Promise<RepositoryResponse<TokenPayload>> {
+    const user = await UserModel.findOne<User>({ email });
+    if (user && !user.emailVerified) {
+      const hashEmail = await bcrypt.hash(email, 10);
+
+      const secret = process.env.JWT_SECRET as string;
+      const hashVerify = jwt.sign(hashEmail, secret as string, {
+        expiresIn: '2d',
+      });
+
+      await emailService.sendEmailToVerificationEmail(
+        email,
+        `http://${url}/verifyemail?id=${hashVerify}`,
+      );
+      const res: RepositoryResponse<TokenPayload> = {
+        message: 'E-mail de validação enviado com sucesso.',
+        status: 'success',
+      };
+      return res;
+    }
+    if (user.emailVerified) {
+      const res: RepositoryResponse<TokenPayload> = {
+        message: 'Usuário com e-mail já verificado.',
+        status: 'error',
+      };
+      return res;
+    }
+    const res: RepositoryResponse<TokenPayload> = {
+      message: 'Usuário não encontrado.',
+      status: 'error',
+    };
+    return res;
   }
 }
 

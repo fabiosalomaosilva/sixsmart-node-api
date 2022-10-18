@@ -45,11 +45,27 @@ class AuthController {
       const userResult = await authService.verifyEmail(token);
       if (userResult.status === 'success') {
         return res.status(200).send(`
-          <h1>${userResult.message}</h1>
+          <div style="width:100%; height: 100vh; justify-content: center;padding-top: 120px;background-color: #f5f5f5;font-family: sans-serif;">
+            <div style="text-align: center;margin-left: 50px;margin-right: 50px;">
+                  <h1>Mega Sorte</h1>
+              <h2>${userResult.message}</h2>
+            </div>
+          </div>
         `);
       } else {
         return res.status(500).json(userResult);
       }
+    }
+  }
+
+  async reSendCode(req: Request, res: Response) {
+    const { email } = req.body;
+    const url = req.get('host') as string;
+    const userResult = await authService.sendCode(email, url);
+    if (userResult.status === 'success') {
+      return res.status(200).json(userResult);
+    } else {
+      return res.status(500).json(userResult);
     }
   }
 }
