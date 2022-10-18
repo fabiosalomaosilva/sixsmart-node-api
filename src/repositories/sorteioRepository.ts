@@ -3,14 +3,16 @@ import { Sorteio } from '../models/sorteio';
 
 class SorteioRepository {
   async getLastSorteio(): Promise<Sorteio> {
-    const obj = await SorteioModel.find().sort({ data_concurso: -1 }).limit(1);
+    const obj = await SorteioModel.find()
+      .sort({ numero_concurso: -1 })
+      .limit(1);
     return obj[0];
   }
 
   async getSorteios(quantidadeSorteios: number): Promise<Sorteio[]> {
     await this.removeDuplicados();
     const lista = await SorteioModel.find()
-      .sort({ data_concurso: -1 })
+      .sort({ numero_concurso: -1 })
       .limit(quantidadeSorteios);
     return lista;
   }
