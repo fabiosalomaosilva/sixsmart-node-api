@@ -7,6 +7,14 @@ class SorteioRepository {
     return obj[0];
   }
 
+  async getSorteios(quantidadeSorteios: number): Promise<Sorteio[]> {
+    await this.removeDuplicados();
+    const lista = await SorteioModel.find()
+      .sort({ data_concurso: -1 })
+      .limit(quantidadeSorteios);
+    return lista;
+  }
+
   async addSorteio(sorteio: Sorteio): Promise<Sorteio> {
     const obj = await SorteioModel.create(sorteio);
     return obj;
@@ -44,6 +52,7 @@ class SorteioRepository {
         },
       },
     ]);
+
     dados.forEach((item) => {
       const id = item.idsUnicos[1];
       this.removeSorteio(id);

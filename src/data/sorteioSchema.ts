@@ -8,6 +8,7 @@ const sorteioSchema = new Schema<Sorteio>({
   },
   numero_concurso: {
     type: Number,
+    unique: true,
   },
   data_concurso: {
     type: Date,
@@ -82,5 +83,14 @@ const sorteioSchema = new Schema<Sorteio>({
     type: Boolean,
   },
 });
+
+sorteioSchema.index(
+  {
+    numero_concurso: 1,
+  },
+  {
+    unique: true,
+  },
+);
 
 export const SorteioModel = mongoose.model('Sorteio', sorteioSchema);

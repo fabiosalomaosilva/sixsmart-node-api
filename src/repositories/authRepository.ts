@@ -37,16 +37,6 @@ class AuthRepository {
       return res;
     }
     try {
-      const oldUser = await UserModel.findOne<User>({ email: user.email });
-
-      if (oldUser) {
-        const res: RepositoryResponse<CreateUserResult> = {
-          message: 'Error: User Already Exist. Please Login',
-          status: 'error',
-        };
-        return res;
-      }
-
       await this.sendCodeAsync(user.email, url);
 
       user.password = await bcrypt.hash(user.password, 10);

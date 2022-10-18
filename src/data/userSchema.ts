@@ -28,4 +28,14 @@ const userSchema = new Schema<User>({
     required: true,
   },
 });
+
+userSchema.index(
+  {
+    email: 1,
+  },
+  {
+    unique: true,
+  },
+);
+
 export const UserModel = mongoose.model('User', userSchema);
