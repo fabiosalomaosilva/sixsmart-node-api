@@ -11,12 +11,13 @@ export interface LoginDto {
 }
 
 export interface TokenPayload {
-  email: string;
+  email?: string;
   name?: string;
   photoUrl?: string;
   role?: string;
-  token: string;
-  emailIsValid: boolean;
+  access_data?: string;
+  emailIsValid?: boolean;
+  id?: string;
 }
 
 export interface CreateUserResult {

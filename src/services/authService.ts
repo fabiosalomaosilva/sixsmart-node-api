@@ -20,6 +20,10 @@ class AuthService {
     return await authRepository.login(user);
   }
 
+  async existsUser(email: string): Promise<boolean> {
+    return await authRepository.existsUser(email);
+  }
+
   async changePassword(
     user: ChangePasswordDto,
   ): Promise<RepositoryResponse<TokenPayload>> {

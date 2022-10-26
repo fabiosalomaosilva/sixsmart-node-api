@@ -7,3 +7,12 @@ export interface User {
   role: 'Cliente' | 'Administrador';
   emailVerified: boolean;
 }
+
+export interface UserModelDto {
+  id?: string;
+  name?: string;
+  email?: string;
+  photoUrl?: string;
+  role?: 'Cliente' | 'Administrador';
+  emailVerified?: boolean;
+}

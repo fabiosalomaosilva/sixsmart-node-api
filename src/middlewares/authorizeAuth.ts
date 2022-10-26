@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-import { TokenPayload } from '../dto/userCreateDto';
-
 export default function AutorizeAuth(
   req: Request,
   res: Response,

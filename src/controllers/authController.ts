@@ -29,6 +29,30 @@ class AuthController {
     }
   }
 
+  async existsUser(req: Request, res: Response) {
+    const email = req.query.email as string;
+    console.log(email);
+    if (email != null || email != undefined) {
+      const userResult = await authService.existsUser(email);
+      console.log(userResult);
+      if (userResult) {
+        return res.status(200).json({
+          message: 'Usuário cadastrado.',
+          status: 'success',
+        });
+      } else {
+        return res.status(500).json({
+          message: 'Usuário não cadastrado.',
+          status: 'error',
+        });
+      }
+    }
+    return res.status(500).send({
+      message: 'E-mail não enviado.',
+      status: 'error',
+    });
+  }
+
   async changePassword(req: Request, res: Response) {
     const changePasswordDto: ChangePasswordDto = req.body;
     const userResult = await authService.changePassword(changePasswordDto);

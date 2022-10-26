@@ -60,10 +60,7 @@ class AuthRepository {
         status: 'success',
       };
 
-      await emailService.sendEmailToVerificationEmail(
-        user.email,
-        `http://${url}/verifyemail?id=${hashVerify}`,
-      );
+      await this.sendCodeAsync(url, result.email);
 
       return res;
     } catch (err) {
@@ -93,11 +90,10 @@ class AuthRepository {
         photoUrl: userRes.photoUrl,
         role: userRes.role,
         emailIsValid: userRes.emailVerified,
-        token: '',
       };
 
       const secret = process.env.JWT_SECRET as string;
-      userResult.token = jwt.sign(userResult, secret as string, {
+      userResult.access_data = jwt.sign(userResult, secret as string, {
         expiresIn: '20d',
       });
       const res: RepositoryResponse<TokenPayload> = {
@@ -112,6 +108,11 @@ class AuthRepository {
       status: 'error',
     };
     return error;
+  }
+
+  async existsUser(email: string): Promise<boolean> {
+    const userRes = await UserModel.findOne<User>({ email });
+    return !userRes;
   }
 
   public async changePassword(
@@ -233,7 +234,7 @@ class AuthRepository {
       };
       return res;
     }
-    if (user.emailVerified) {
+    if (user?.emailVerified) {
       const res: RepositoryResponse<TokenPayload> = {
         message: 'Usuário com e-mail já verificado.',
         status: 'error',
