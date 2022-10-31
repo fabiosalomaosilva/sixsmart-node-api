@@ -18,7 +18,11 @@ class AuthRepository {
     user: UserCreateDto,
     url: string,
   ): Promise<RepositoryResponse<CreateUserResult>> {
-    if (user.password.length < 6) {
+    if (
+      user.password === undefined ||
+      user.confirmPassword === undefined ||
+      user.password?.length < 6
+    ) {
       const res: RepositoryResponse<CreateUserResult> = {
         error: 'Senha não atende os requisitos exigidos.',
         status: 'error',
@@ -74,7 +78,6 @@ class AuthRepository {
 
   async login(login: LoginDto): Promise<RepositoryResponse<TokenPayload>> {
     const userRes = await UserModel.findOne<User>({ email: login.email });
-
     if (userRes) {
       const isEqual = bcrypt.compareSync(login.password, userRes.password);
       if (!isEqual) {

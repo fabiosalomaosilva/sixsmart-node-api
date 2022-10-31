@@ -9,10 +9,12 @@ export interface User {
 }
 
 export interface UserModelDto {
-  id?: string;
   name?: string;
+  given_name?: string;
+  family_name?: string;
   email?: string;
-  photoUrl?: string;
+  picture?: string;
   role?: 'Cliente' | 'Administrador';
-  emailVerified?: boolean;
+  email_verified?: boolean;
+  locale?: string;
 }

@@ -6,28 +6,26 @@ import passportAuth from '../../middlewares/passportAuth';
 import passport from '../../strategies/googleStrategy';
 
 const googleRouter = Router();
+const CLIENT_URL = 'http://localhost:5173/auth/loginsocialsuccess';
 
-googleRouter.get(
-  '/auth/success',
-  passportAuth,
-  (req: Request, res: Response) => {
-    const usuario = req.user?._json;
-    const token: TokenPayload = {
-      email: usuario?.email,
-      emailIsValid: usuario?.emailVerified,
-      name: usuario?.name,
-      photoUrl: usuario?.photoUrl,
-      id: req.user?.id,
-      access_data: '',
-    };
+googleRouter.get('/auth/success', (req: Request, res: Response) => {
+  const usuario = req.user?._json;
+  const token: TokenPayload = {
+    email: usuario?.email,
+    emailIsValid: usuario?.email_verified,
+    name: usuario?.name,
+    photoUrl: usuario?.picture,
+    id: req.user?.id,
+    access_data: '',
+  };
 
-    const secret = process.env.JWT_SECRET as string;
-    token.access_data = jwt.sign(token, secret as string, {
-      expiresIn: '20d',
-    });
-    return res.json(token);
-  },
-);
+  const secret = process.env.JWT_SECRET as string;
+  token.access_data = jwt.sign(token, secret as string, {
+    expiresIn: '20d',
+  });
+  console.log(req.user?._json);
+  return res.status(200).json(token);
+});
 
 googleRouter.get(
   '/auth/google',
@@ -40,7 +38,7 @@ googleRouter.get(
   '/auth/google/callback',
   passport.authenticate('google', {
     failureRedirect: '/auth/failed',
-    successRedirect: '/auth/success',
+    successRedirect: CLIENT_URL,
   }),
 );
 

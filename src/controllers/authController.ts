@@ -9,13 +9,14 @@ import authService from '../services/authService';
 
 class AuthController {
   async register(req: Request, res: Response) {
+    console.log(req.body);
     const user: UserCreateDto = req.body;
     const url = req.get('host') as string;
     const userResult = await authService.register(user, url);
     if (userResult.status === 'success') {
       return res.status(200).json(userResult);
     } else {
-      return res.status(500).json(userResult);
+      return res.status(400).json(userResult);
     }
   }
 
@@ -25,7 +26,7 @@ class AuthController {
     if (userResult.status === 'success') {
       return res.status(200).json(userResult.model);
     } else {
-      return res.status(500).json(userResult);
+      return res.status(400).json(userResult);
     }
   }
 
@@ -41,13 +42,13 @@ class AuthController {
           status: 'success',
         });
       } else {
-        return res.status(500).json({
+        return res.status(400).json({
           message: 'Usuário não cadastrado.',
           status: 'error',
         });
       }
     }
-    return res.status(500).send({
+    return res.status(400).send({
       message: 'E-mail não enviado.',
       status: 'error',
     });
@@ -59,7 +60,7 @@ class AuthController {
     if (userResult.status === 'success') {
       return res.status(200).json(userResult.message);
     } else {
-      return res.status(500).json(userResult);
+      return res.status(400).json(userResult);
     }
   }
 
@@ -77,7 +78,7 @@ class AuthController {
           </div>
         `);
       } else {
-        return res.status(500).json(userResult);
+        return res.status(400).json(userResult);
       }
     }
   }
@@ -89,7 +90,7 @@ class AuthController {
     if (userResult.status === 'success') {
       return res.status(200).json(userResult);
     } else {
-      return res.status(500).json(userResult);
+      return res.status(400).json(userResult);
     }
   }
 }
