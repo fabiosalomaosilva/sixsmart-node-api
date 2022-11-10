@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import {
   ChangePasswordDto,
+  ForgotPasswordDto,
   LoginDto,
   UserCreateDto,
 } from '../dto/userCreateDto';
@@ -52,6 +53,16 @@ class AuthController {
       message: 'E-mail não enviado.',
       status: 'error',
     });
+  }
+
+  async forgotPassword(req: Request, res: Response) {
+    const forgotPasswordDto: ForgotPasswordDto = req.body;
+    const userResult = await authService.forgotPassword(forgotPasswordDto);
+    if (userResult.status === 'success') {
+      return res.status(200).json(userResult.model);
+    } else {
+      return res.status(400).json(userResult);
+    }
   }
 
   async changePassword(req: Request, res: Response) {

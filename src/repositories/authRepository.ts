@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import { UserModel } from '../data/userSchema';
@@ -9,6 +10,7 @@ import {
   CreateUserResult,
   TokenPayload,
   ChangePasswordDto,
+  ForgotPasswordDto,
 } from '../dto/userCreateDto';
 import { User } from '../models/user';
 import emailService from '../services/emailService';
@@ -41,8 +43,6 @@ class AuthRepository {
       return res;
     }
     try {
-      await this.sendCodeAsync(user.email, url);
-
       user.password = await bcrypt.hash(user.password, 10);
 
       const userModel: User = {
@@ -51,6 +51,7 @@ class AuthRepository {
         password: user.password,
         role: 'Cliente',
         emailVerified: false,
+        photoUrl: user.photoUrl,
       };
 
       const result = await UserModel.create(userModel);
@@ -64,7 +65,7 @@ class AuthRepository {
         status: 'success',
       };
 
-      await this.sendCodeAsync(url, result.email);
+      await this.sendCodeAsync(user.email, url);
 
       return res;
     } catch (err) {
@@ -211,6 +212,38 @@ class AuthRepository {
         status: 'error',
       };
       return res;
+    }
+  }
+
+  public async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    try {
+      const userRes = await UserModel.findOne<User>({
+        email: forgotPasswordDto.email,
+      });
+      if (userRes) {
+        const newPassword = crypto.randomBytes(5).toString('hex');
+        userRes.password = await bcrypt.hash(newPassword, 10);
+
+        await UserModel.findOneAndUpdate({ email: userRes.email }, userRes);
+        await emailService.sendEmailForgotPassword(userRes.email, newPassword);
+        const result: RepositoryResponse<ForgotPasswordDto> = {
+          status: 'success',
+          message: 'Senha alterada com sucesso',
+        };
+        return result;
+      }
+      const resultError: RepositoryResponse<ForgotPasswordDto> = {
+        status: 'error',
+        message: 'usuário não encontrado. A senha não alterada',
+      };
+      return resultError;
+    } catch (error) {
+      const resultError: RepositoryResponse<ForgotPasswordDto> = {
+        status: 'error',
+        error: error,
+        message: 'usuário não encontrado. A senha não alterada',
+      };
+      return resultError;
     }
   }
 

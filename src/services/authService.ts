@@ -2,6 +2,7 @@ import { RepositoryResponse } from '../dto/repositoryResponse';
 import {
   ChangePasswordDto,
   CreateUserResult,
+  ForgotPasswordDto,
   LoginDto,
   TokenPayload,
   UserCreateDto,
@@ -32,6 +33,9 @@ class AuthService {
 
   async verifyEmail(token: string): Promise<RepositoryResponse<TokenPayload>> {
     return await authRepository.verifyEmail(token);
+  }
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    return await authRepository.forgotPassword(forgotPasswordDto);
   }
 
   async sendCode(

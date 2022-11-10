@@ -18,6 +18,7 @@ router.post(
   AutorizeAuth,
   authController.changePassword,
 );
+router.post('/auth/forgotpassword', authController.forgotPassword);
 router.get('/verifyemail', authController.verifyEmail);
 router.get('/sorteios/:quantidade', sorteiosController.get);
 router.get('/auth/existsuser', authController.existsUser);

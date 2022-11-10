@@ -1,5 +1,6 @@
 export interface UserCreateDto {
   email: string;
+  photoUrl?: string;
   password: string;
   confirmPassword: string;
   name: string;
@@ -31,4 +32,14 @@ export interface ChangePasswordDto {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
+}
+
+export interface ForgotPasswordDto {
+  email: string;
+}
+
+export interface ResponseDefault {
+  success: boolean;
+  errorMessage?: string;
+  message?: string;
 }
