@@ -4,6 +4,7 @@ import {
   ChangePasswordDto,
   ForgotPasswordDto,
   LoginDto,
+  LoginSocialDto,
   UserCreateDto,
 } from '../dto/userCreateDto';
 import authService from '../services/authService';
@@ -24,6 +25,16 @@ class AuthController {
   async login(req: Request, res: Response) {
     const user: LoginDto = req.body;
     const userResult = await authService.login(user);
+    if (userResult.status === 'success') {
+      return res.status(200).json(userResult.model);
+    } else {
+      return res.status(400).json(userResult);
+    }
+  }
+
+  async loginSocial(req: Request, res: Response) {
+    const user: LoginSocialDto = req.body;
+    const userResult = await authService.loginSocial(user);
     if (userResult.status === 'success') {
       return res.status(200).json(userResult.model);
     } else {

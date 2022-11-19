@@ -4,6 +4,8 @@ export interface UserCreateDto {
   password: string;
   confirmPassword: string;
   name: string;
+  provider: string;
+  userId: string;
 }
 
 export interface LoginDto {
@@ -18,7 +20,7 @@ export interface TokenPayload {
   role?: string;
   access_data?: string;
   emailIsValid?: boolean;
-  id?: string;
+  userId?: string;
 }
 
 export interface CreateUserResult {
@@ -42,4 +44,9 @@ export interface ResponseDefault {
   success: boolean;
   errorMessage?: string;
   message?: string;
+}
+
+export interface LoginSocialDto {
+  email: string;
+  userId: string;
 }

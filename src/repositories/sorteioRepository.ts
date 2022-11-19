@@ -1,4 +1,5 @@
 import { SorteioModel } from '../data/sorteioSchema';
+import { Resultado } from '../models/Resultado';
 import { Sorteio } from '../models/sorteio';
 
 class SorteioRepository {
@@ -9,7 +10,7 @@ class SorteioRepository {
     return obj[0];
   }
 
-  async getSorteios(quantidadeSorteios: number): Promise<Sorteio[]> {
+  async getSorteios(quantidadeSorteios: number): Promise<Resultado[]> {
     await this.removeDuplicados();
     const lista = await SorteioModel.find()
       .sort({ numero_concurso: -1 })

@@ -11,6 +11,7 @@ import {
   TokenPayload,
   ChangePasswordDto,
   ForgotPasswordDto,
+  LoginSocialDto,
 } from '../dto/userCreateDto';
 import { User } from '../models/user';
 import emailService from '../services/emailService';
@@ -112,6 +113,47 @@ class AuthRepository {
       status: 'error',
     };
     return error;
+  }
+
+  public async loginSocial(loginSocialDto: LoginSocialDto) {
+    try {
+      const userRes = await UserModel.findOne<User>({
+        email: loginSocialDto.email,
+        userid: loginSocialDto.userId,
+      });
+      if (userRes) {
+        const userResult: TokenPayload = {
+          name: userRes.name,
+          email: userRes.email,
+          photoUrl: userRes.photoUrl,
+          role: userRes.role,
+          emailIsValid: userRes.emailVerified,
+          userId: userRes.userId,
+        };
+
+        const secret = process.env.JWT_SECRET as string;
+        userResult.access_data = jwt.sign(userResult, secret as string, {
+          expiresIn: '20d',
+        });
+        const res: RepositoryResponse<TokenPayload> = {
+          message: 'User registered successfully.',
+          model: userResult,
+          status: 'success',
+        };
+        return res;
+      }
+      const error: RepositoryResponse<TokenPayload> = {
+        message: 'Usuário não registrado no sistema.',
+        status: 'error',
+      };
+      return error;
+    } catch (error) {
+      const res: RepositoryResponse<TokenPayload> = {
+        error: 'Usuário não registrado no sistema.',
+        status: 'error',
+      };
+      return res;
+    }
   }
 
   async existsUser(email: string): Promise<boolean> {

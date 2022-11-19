@@ -13,6 +13,7 @@ router.get('/', (req, res) => res.send('Server is running 🔥🔥'));
 router.get('/failed', (req, res) => res.send('Erro de login!'));
 router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);
+router.post('/auth/loginsocial', authController.loginSocial);
 router.post(
   '/auth/changepassword',
   AutorizeAuth,

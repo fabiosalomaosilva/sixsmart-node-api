@@ -1,11 +1,13 @@
 export interface User {
   id?: string;
+  userId?: string;
   name?: string;
   email: string;
   password: string;
   photoUrl?: string;
   role: 'Cliente' | 'Administrador';
   emailVerified: boolean;
+  provider: string;
 }
 
 export interface UserModelDto {

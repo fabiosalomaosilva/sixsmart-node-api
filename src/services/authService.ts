@@ -4,6 +4,7 @@ import {
   CreateUserResult,
   ForgotPasswordDto,
   LoginDto,
+  LoginSocialDto,
   TokenPayload,
   UserCreateDto,
 } from '../dto/userCreateDto';
@@ -19,6 +20,11 @@ class AuthService {
 
   async login(user: LoginDto): Promise<RepositoryResponse<TokenPayload>> {
     return await authRepository.login(user);
+  }
+  async loginSocial(
+    loginSocialDto: LoginSocialDto,
+  ): Promise<RepositoryResponse<TokenPayload>> {
+    return await authRepository.loginSocial(loginSocialDto);
   }
 
   async existsUser(email: string): Promise<boolean> {
